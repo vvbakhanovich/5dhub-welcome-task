@@ -10,4 +10,4 @@ spring:
 server:
   port: 8070
 application:
-  user-service-url: http://localhost:8090/api/v1/users
+  user-service-url: http://${USER_SERVICE_HOST:localhost}:8282/api/v1/users
