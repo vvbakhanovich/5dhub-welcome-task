@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users
+      author: vbakhanovich
+      changes:
+        - sqlFile:
+            dbms: h2
+            path: migrations/v1_create_users.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: add-users
+      runOnChange: true
+      author: vbakhanovich
+      changes:
+        - loadUpdateData:
+            tableName: users
+            primaryKey: id
+            separator: ;
+            file: data/v1_add_users.csv
+            relativeToChangelogFile: true
