@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-companies
+      author: vbakhanovich
+      changes:
+        - sqlFile:
+            dbms: h2
+            path: migrations/v1_create_companies.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: create-companies-employees
+      author: vbakhanovich
+      changes:
+        - sqlFile:
+            dbms: h2
+            path: migrations/v2_create_companies_employees.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: add-companies
+      author: vbakhanovich
+      runOnChange: true
+      changes:
+        - loadUpdateData:
+            tableName: companies
+            primaryKey: id
+            separator: ;
+            file: data/v1_add_companies.csv
+            relativeToChangelogFile: true
+  - changeSet:
+      id: add-employees
+      author: vbakhanovich
+      runOnChange: true
+      changes:
+        - loadData:
+            tableName: companies_employees
+            separator: ;
+            file: data/v2_add_employees.csv
+            relativeToChangelogFile: true
