@@ -1,6 +1,7 @@
 package com.vvbakh.companyservice.controller;
 
 import com.vvbakh.companyservice.dto.CompanyDto;
+import com.vvbakh.companyservice.dto.CompanySearchFilter;
 import com.vvbakh.companyservice.mapper.CompanyMapper;
 import com.vvbakh.companyservice.model.FullCompany;
 import com.vvbakh.companyservice.service.CompanyService;
@@ -24,6 +25,12 @@ public class CompanyController {
     public CompanyDto findCompanyById(@PathVariable Long companyId) {
         log.debug("Requesting company with id '{}'.", companyId);
         FullCompany company = companyService.findCompanyById(companyId);
+        return companyMapper.toDto(company);
+    }
+
+    @GetMapping("/search")
+    public CompanyDto searchCompany(CompanySearchFilter searchFilter) {
+        FullCompany company = companyService.searchCompany(searchFilter);
         return companyMapper.toDto(company);
     }
 }
