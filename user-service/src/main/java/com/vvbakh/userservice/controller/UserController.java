@@ -5,6 +5,7 @@ import com.vvbakh.userservice.mapper.UserMapper;
 import com.vvbakh.userservice.model.User;
 import com.vvbakh.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -22,6 +24,7 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> getUsersByIdsIn(@RequestParam List<Long> id) {
+        log.info("Requesting users by ids, number of ids '{}'.", id.size());
         List<User> users = userService.getUsersByIdsIn(id);
         return userMapper.toDtoList(users);
     }

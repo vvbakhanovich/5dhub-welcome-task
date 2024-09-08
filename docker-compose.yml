@@ -1,0 +1,112 @@
+services:
+  config-server:
+    build: config-server
+    image: config-server-image
+    container_name: config-server
+    hostname: config-server
+    ports:
+      - "8888:8888"
+    environment:
+      - EUREKA_SERVER_HOST=discovery-server
+      - USER_SERVICE_HOST=user-service
+    restart: on-failure
+    healthcheck:
+      test: "wget -T5 -qO- http://localhost:8888/actuator/health | grep UP || exit 1"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  discovery-server:
+    build: discovery-server
+    image: discovery-server-image
+    container_name: discovery-server
+    hostname: discovery-server
+    ports:
+      - "8761:8761"
+    environment:
+      - CONFIG_SERVER_URL=http://config-server:8888
+    depends_on:
+      config-server:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: "wget -T5 -qO- http://localhost:8761/actuator/health | grep UP || exit 1"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  user-service:
+    build: user-service
+    image: user-service-image
+    container_name: user-service
+    hostname: user-service
+    ports:
+      - "8090:8090"
+    environment:
+      - CONFIG_SERVER_URL=http://config-server:8888
+      - EUREKA_SERVER_HOST=discovery-server
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+    healthcheck:
+      test: "wget -T5 -qO- http://localhost:8090/actuator/health | grep UP || exit 1"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    restart: on-failure
+
+
+  company-service:
+    build: company-service
+    image: company-service-image
+    container_name: company-service
+    hostname: company-service
+    ports:
+      - "8070:8070"
+    environment:
+      - CONFIG_SERVER_URL=http://config-server:8888
+      - USER_SERVICE_URL=http://api-gateway:8282/api/v1/users
+      - EUREKA_SERVER_HOST=discovery-server
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+    healthcheck:
+      test: "wget -T5 -qO- http://localhost:8070/actuator/health | grep UP || exit 1"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+    restart: on-failure
+
+  api-gateway:
+    build: api-gateway
+    image: api-gateway-image
+    container_name: api-gateway
+    hostname: api-gateway
+    ports:
+      - "8282:8282"
+    environment:
+      - CONFIG_SERVER_URL=http://config-server:8888
+      - EUREKA_SERVER_HOST=discovery-server
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      company-service:
+        condition: service_healthy
+    restart: on-failure

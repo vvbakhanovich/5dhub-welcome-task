@@ -1,9 +1,0 @@
-spring:
-  cloud:
-    config:
-      override-system-properties: false
-eureka:
-  instance:
-    hostname: localhost
-    service-url:
-      default-zone: http://${EUREKA_SERVER_HOST:localhost}:8761/eureka

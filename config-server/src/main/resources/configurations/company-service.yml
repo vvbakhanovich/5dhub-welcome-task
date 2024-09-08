@@ -9,5 +9,3 @@ spring:
     show-sql: true
 server:
   port: 8070
-application:
-  user-service-url: http://${USER_SERVICE_HOST:localhost}:8282/api/v1/users
