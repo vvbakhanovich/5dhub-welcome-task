@@ -5,5 +5,5 @@ import com.vvbakh.companyservice.dto.Employee;
 import java.util.List;
 
 public interface EmployeeClient {
-    List<Employee> findEmploeesByIdsIn(List<Long> ids);
+    List<Employee> findEmployeesByIdsIn(List<Long> ids);
 }
