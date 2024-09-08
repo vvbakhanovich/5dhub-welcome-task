@@ -23,9 +23,16 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping
+    public UserDto findUserByLastname(@RequestParam String lastname) {
+        log.info("Requesting users with surname '{}'.", lastname);
+        final User user = userService.findUserByLastname(lastname);
+        return userMapper.toDto(user);
+    }
+
+    @GetMapping
     public List<UserDto> getUsersByIdsIn(@RequestParam List<Long> id) {
         log.info("Requesting users by ids, number of ids '{}'.", id.size());
-        List<User> users = userService.getUsersByIdsIn(id);
+        final List<User> users = userService.getUsersByIdsIn(id);
         return userMapper.toDtoList(users);
     }
 }
