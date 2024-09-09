@@ -12,10 +12,10 @@
 
 - Company service, which responsibility is managing companies. It has two endpoints:
     1) **/api/v1/companies/{companyId}**, where *'companyId'* is path variable. This endpoint performs search for 
-    company with specific id. If company not found, returns 404 status.
+    company with specific id with the list of it's employees fetched from user service via webclient. If company not found, returns 404 status.
     2) **/api/v1/companies/search**. This endpoint have search filter, consisting of two request parameters: companyId 
       and companyName. Both of them are optional. This endpoint performs search for
-          company with provided id or name. If company not found, returns 404 status.
+          company with provided id or name with the list of it's employees fetched from user service via webclient . If company not found, returns 404 status.
 ---
 
 ### Application also contains *3 Spring Cloud microservices*:
