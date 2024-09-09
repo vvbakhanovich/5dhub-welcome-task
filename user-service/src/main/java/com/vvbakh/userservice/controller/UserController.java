@@ -7,6 +7,7 @@ import com.vvbakh.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +23,8 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @GetMapping
-    public UserDto findUserByLastname(@RequestParam String lastname) {
+    @GetMapping("/{lastname}")
+    public UserDto findUserByLastname(@PathVariable String lastname) {
         log.info("Requesting users with surname '{}'.", lastname);
         final User user = userService.findUserByLastname(lastname);
         return userMapper.toDto(user);
